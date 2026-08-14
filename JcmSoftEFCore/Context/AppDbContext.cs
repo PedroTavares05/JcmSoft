@@ -8,7 +8,15 @@ using System.Threading.Tasks;
 
 namespace JcmSoftEFCore.Context;
 
-internal class AppDbContext : DbContext
+public class AppDbContext : DbContext
 {
     public DbSet <Departamento> Departamentos { get; set; }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+      
+        string conexao = AppConfig.GetConnectionString();
+        ServerVersion versaoDoServidor = ServerVersion.AutoDetect(conexao);
+
+        optionsBuilder.UseMySql(conexao, versaoDoServidor);
+    }
 }
