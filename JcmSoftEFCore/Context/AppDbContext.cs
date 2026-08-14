@@ -1,0 +1,14 @@
+﻿using JcmSoft.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace JcmSoftEFCore.Context;
+
+internal class AppDbContext : DbContext
+{
+    public DbSet <Departamento> Departamentos { get; set; }
+}
