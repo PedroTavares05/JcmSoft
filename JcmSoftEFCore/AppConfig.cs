@@ -13,4 +13,5 @@ public static class AppConfig
         // 1. String na mesma linha. Note a troca de "sa" para "root" (Uid e Pwd são as siglas padrão do MySQL).
         return "Server=localhost;Database=JcmSoftDb;Uid=root;Pwd=12345;";
     }
+    
 }

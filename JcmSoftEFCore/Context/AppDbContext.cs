@@ -19,4 +19,16 @@ public class AppDbContext : DbContext
 
         optionsBuilder.UseMySql(conexao, versaoDoServidor);
     }
+    override protected void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Departamento>().HasKey(d=>d.CodigoID);
+        modelBuilder.Entity<Departamento>
+            (entity =>
+                {
+                    entity.Property(d => d.Data).HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
+
+
+                }
+            );
+    }
 }
