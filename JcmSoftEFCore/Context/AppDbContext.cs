@@ -26,7 +26,10 @@ public class AppDbContext : DbContext
             (entity =>
                 {
                     entity.Property(d => d.Data).HasDefaultValueSql("CURRENT_TIMESTAMP(6)");
-
+                    entity.Property(d => d.Nome).IsRequired().HasMaxLength(100);
+                    entity.Property(d => d.Descricao).IsRequired().HasMaxLength(500);
+                    entity.Property(d => d.Descricao).HasColumnName("Descricao_Departamento");
+                    entity.Property(d => d.Nome).HasColumnName("Nome_Departamento");
 
                 }
             );
