@@ -8,22 +8,35 @@ using (AppDbContext context = new AppDbContext())
     Console.WriteLine("Banco de dados deletado com sucesso!");
     Console.WriteLine("Criando Banco de dados novo");
     context.Database.EnsureCreated();
-    CriarDepartamento(context);
     Console.WriteLine("O departamento foi criado");
+    CriarFuncionario(context);
+    //var departamentos = context.Departamentos.ToList();
+    //foreach (var item in departamentos)
+    //{
+    //    Console.WriteLine($"{item.CodigoID}: {item.Nome} | {item.Descricao}");
+    //}
+    //var Departamento = context.Departamentos.FirstOrDefault(d => d.CodigoID == 3);
+    //Console.WriteLine(Departamento != null ? $"O ID do Departamento é {Departamento.CodigoID} e o nome é {Departamento.Nome}":"Departamento não encontrado");
 }
 Console.ReadKey();
 
-void CriarDepartamento(AppDbContext context)
+//void CriarDepartamento(AppDbContext context)
+//{
+    
+//    //context.Departamentos.AddRange(departamentos);
+//    //context.SaveChanges();
+//    //Console.WriteLine("Departamentos criados com sucesso!");
+//}
+void CriarFuncionario(AppDbContext context)
 {
-    List<Departamento> departamentos = new List<Departamento>
+    var funcionario = new Funcionario
     {
-        new Departamento { Nome = "Recursos Humanos", Descricao = "Departamento responsável pela gestão de pessoas e recursos humanos da empresa." },
-        new Departamento { Nome = "Financeiro", Descricao = "Departamento responsável pela gestão financeira da empresa, incluindo contabilidade, orçamento e análise financeira." },
-        new Departamento { Nome = "Marketing", Descricao = "Departamento responsável pela promoção e divulgação dos produtos ou serviços da empresa, bem como pela pesquisa de mercado e estratégias de marketing." },
-        new Departamento { Nome = "Tecnologia da Informação", Descricao = "Departamento responsável pela gestão da infraestrutura tecnológica da empresa, incluindo hardware, software, redes e segurança da informação." },
-        new Departamento { Nome = "Vendas", Descricao = "Departamento responsável pela comercialização dos produtos ou serviços da empresa, incluindo prospecção de clientes, negociação e fechamento de vendas." }
+        Nome = "João Silva",
+        Cargo = "Analista de Sistemas",
+        Salario = 5000.00m,
+        DepartamentoID = 1
     };
-    context.Departamentos.AddRange(departamentos);
+    context.Funcionarios.Add(funcionario);
     context.SaveChanges();
-    Console.WriteLine("Departamentos criados com sucesso!");
+    Console.WriteLine("Funcionário criado com sucesso!");
 }

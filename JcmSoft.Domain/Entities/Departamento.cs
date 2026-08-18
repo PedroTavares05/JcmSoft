@@ -11,10 +11,11 @@ namespace JcmSoft.Domain.Entities;
 
 public class Departamento
 {
-    public int CodigoID { get; set; }
+    public int DepartamentoID { get; set; }
     public string Nome { get; set; } = string.Empty;
     public string Descricao { get; set; } = string.Empty;
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime Data {  get; set; }
+    public ICollection<Funcionario>? Funcionarios { get; set; } = new List<Funcionario> ();
 
 }
