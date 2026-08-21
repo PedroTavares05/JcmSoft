@@ -11,6 +11,7 @@ namespace JcmSoft.Domain.Entities;
 
 public class Funcionario
 {
+    //PK
     public int FuncionarioID { get; set; }
     public string? Nome { get; set; }
     public string? Cargo { get; set; }
@@ -22,4 +23,6 @@ public class Funcionario
     public Departamento? Departamento { get; set; }
     //Navegação
     public ICollection<FuncionariosProjetos> FuncionariosProjetos { get; set; }= new List<FuncionariosProjetos>();
+
+    public FuncionarioDetalhe? FuncionarioDetalhe { get; set; }
 }
