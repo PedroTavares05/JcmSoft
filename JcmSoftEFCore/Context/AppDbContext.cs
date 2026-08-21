@@ -1,9 +1,12 @@
 ﻿using JcmSoft.Domain.Entities;
+using JcmSoft.Domain.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,13 +17,18 @@ public class AppDbContext : DbContext
     public DbSet<Departamento> Departamentos { get; set; }
     public DbSet<Funcionario> Funcionarios { get; set; }
     public DbSet<FuncionarioDetalhe> FuncionariosDetalhes { get; set; }
+    public DbSet<Projeto> Projetos { get; set; }
+    public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<FuncionariosProjetos> FuncionariosProjetos { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
 
         string conexao = AppConfig.GetConnectionString();
         ServerVersion versaoDoServidor = ServerVersion.AutoDetect(conexao);
 
-        optionsBuilder.UseMySql(conexao, versaoDoServidor);
+        optionsBuilder.UseMySql(conexao, versaoDoServidor).LogTo(Console.WriteLine,
+                       new[] { DbLoggerCategory.Database.Command.Name },
+                       LogLevel.Information); ;
     }
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -90,7 +98,43 @@ public class AppDbContext : DbContext
                                     new FuncionarioDetalhe { FuncionarioDetalheID = 4, Endereco = "Rua D, 321", Telefone = "(11) 4444-4444", DataNascimento = new DateTime(1995, 4, 4), FuncionarioID = 4, CPF = "555.666.777-88", Nacionalidade = "Brasileiro", Genero = Genero.Feminino, Escolariedade = Escolariedade.Mestrado, EstadoCivil = EstadoCivil.Solteiro }
                                 );
                     });
+        modelBuilder.Entity<Cliente>().HasKey(c => c.ClienteID);
+        modelBuilder.Entity<Cliente>(entity =>
+        {
+            entity.Property(c => c.ClienteID).ValueGeneratedOnAdd();
+            entity.Property(c => c.Nome).IsRequired().HasMaxLength(100);
+            entity.Property(c => c.Email).IsRequired().HasMaxLength(100);
+            entity.Property(c => c.Telefone).IsRequired().HasMaxLength(20);
+            entity.Property(c => c.Nome).HasColumnName("Nome_Cliente");
+            entity.Property(c => c.Email).HasColumnName("Email_Cliente");
+            entity.Property(c => c.Telefone).HasColumnName("Telefone_Cliente");
+            entity.HasData
+                (
+                    new Cliente { ClienteID= 1, Nome="Pedro Henrique", Telefone="(27)988232622", Email="Phtsantos05@gmail.com"}
+                );
+        });
+
+        modelBuilder.Entity<Projeto>().HasKey(p => p.ProjetoID);
+        modelBuilder.Entity<Projeto>(entity=> 
+                                { 
+                                    entity.Property(p => p.ProjetoID).ValueGeneratedOnAdd();
+                                    entity.Property(p => p.Nome).IsRequired().HasMaxLength(100);
+                                    entity.Property(p => p.Descricao).IsRequired().HasMaxLength(500);
+                                    entity.Property(p => p.DataInicio).IsRequired();
+                                    entity.Property(p => p.DataFim).IsRequired();
+                                    entity.Property(p => p.Nome).HasColumnName("Nome_Projeto");
+                                    entity.Property(p => p.Descricao).HasColumnName("Descricao_Projeto");
+                                    entity.HasData
+                                        (
+                                            new Projeto { ProjetoID = 1, Nome = "Projeto A", Descricao = "Descrição do Projeto A", DataInicio = new DateTime(2023, 1, 1), DataFim = new DateTime(2023, 6, 30), ClienteID=1, Estado = EstadoProjeto.EmAndamento },
+                                            new Projeto { ProjetoID = 2, Nome = "Projeto B", Descricao = "Descrição do Projeto B", DataInicio = new DateTime(2023, 2, 1), DataFim = new DateTime(2023, 7, 31), ClienteID = 1, Estado = EstadoProjeto.EmAndamento },
+                                            new Projeto { ProjetoID = 3, Nome = "Projeto C", Descricao = "Descrição do Projeto C", DataInicio = new DateTime(2023, 3, 1), DataFim = new DateTime(2023, 8, 31), ClienteID=1,Estado=EstadoProjeto.EmAndamento }
+                                        );
 
 
+                                }
+                                );
+
+        modelBuilder.Entity<FuncionariosProjetos>().HasKey(fp=> new { fp.ProjetoID, fp.FuncionarioID });
     }
 }
